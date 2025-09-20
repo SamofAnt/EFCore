@@ -3,6 +3,7 @@ using System;
 using EFCore.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCore.Data.Migrations
 {
     [DbContext(typeof(FootballLeagueDbContext))]
-    partial class FootballLeagueDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250920024151_SeededTeams")]
+    partial class SeededTeams
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
@@ -55,19 +58,19 @@ namespace EFCore.Data.Migrations
                         new
                         {
                             TeamId = 1,
-                            CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31, DateTimeKind.Unspecified),
+                            CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31, DateTimeKind.Unspecified).AddTicks(8168),
                             Name = "Tivoli Gardens F.C."
                         },
                         new
                         {
                             TeamId = 2,
-                            CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31, DateTimeKind.Unspecified),
+                            CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31, DateTimeKind.Unspecified).AddTicks(8602),
                             Name = "Waterhouse F.C."
                         },
                         new
                         {
                             TeamId = 3,
-                            CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31, DateTimeKind.Unspecified),
+                            CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31, DateTimeKind.Unspecified).AddTicks(8605),
                             Name = "Humble Lions F.C."
                         });
                 });
