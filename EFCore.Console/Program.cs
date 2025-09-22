@@ -11,7 +11,7 @@ using var context = new FootballLeagueDbContext();
 //GetAllTeams();    
 
 // Select a single record - First one in the list that meets a codition
-var team =  await context.Teams.FirstAsync(t=> t.TeamId == 1);
+//var team =  await context.Teams.FirstAsync(t=> t.TeamId == 1);
 // var team = await context.Teams.FirstOrDefaultAsync(t=> t.TeamId == 1);
 
 //Selecting a single record - First one in the list
@@ -52,6 +52,22 @@ async Task GetAllTeamsQuerySyntax()
 // Select all record that meet a condition
 // await GetFilteredTeams();
 
+
+// await AggregateMethods();
+
+// Grouping and Aggregating
+var groupedTeams = context.Teams
+    .GroupBy(q => q.CreatedDate.Date);
+foreach (var group in groupedTeams)
+{
+    Console.WriteLine(group.Key);
+    foreach (var team in group)
+    {
+        Console.WriteLine(team.Name);
+    }
+}
+
+// Aggregate functions
 async Task AggregateMethods()
 {
     var numberOfTeams = await context.Teams.CountAsync();
