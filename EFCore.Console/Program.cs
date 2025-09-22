@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using EFCore.Data;
+using EFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -58,17 +59,56 @@ async Task GetAllTeamsQuerySyntax()
 // Grouping and Aggregating
 // GroupByMethod();
 
+Console.WriteLine("Enter '1' for Team with Id 1 or '2' for teams that contain 'F.C");
+var option = Convert.ToInt32(Console.ReadLine());
+List<Team> teamAsList = new List<Team>();
+
+teamAsList = await context.Teams.ToListAsync();
+if (option == 1)
+{
+    teamAsList = teamAsList.Where(q => q.TeamId == 1).ToList();
+}
+else if (option == 2)
+{
+    teamAsList = teamAsList.Where(q => q.Name.Contains("F.C.")).ToList();
+}
+
+foreach (var team in teamAsList)
+{
+    Console.WriteLine(team.Name);
+}
+
+var teamAsQueryable = context.Teams.AsQueryable();
+if (option == 1)
+{
+    teamAsQueryable = teamAsQueryable.Where(q => q.TeamId == 1);
+}
+else if (option == 2)
+{
+    teamAsQueryable = teamAsQueryable.Where(q => q.Name.Contains("F.C."));
+}
+var finalTeamList = await teamAsQueryable.ToListAsync();
+foreach (var team in finalTeamList)
+{
+    Console.WriteLine(team.Name);
+}
+
 //Select and Projecting
 
-var teams = await context.Teams
-    .Select(q => new {q.Name, q.CreatedDate})
-    .ToListAsync();
+async Task SelectAndProjection()
+    {
 
-foreach (var team in teams)
-{
-    Console.WriteLine($"{team.Name} - {team.CreatedDate }");
-}
-//Skip and Take
+
+        var teams = await context.Teams
+            .Select(q => new { q.Name, q.CreatedDate })
+            .ToListAsync();
+
+        foreach (var team in teams)
+        {
+            Console.WriteLine($"{team.Name} - {team.CreatedDate}");
+        }
+        //Skip and Take
+    }
 
 async Task SkipAndTake()
 {
