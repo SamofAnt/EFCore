@@ -56,16 +56,34 @@ async Task GetAllTeamsQuerySyntax()
 // await AggregateMethods();
 
 // Grouping and Aggregating
-var groupedTeams = context.Teams
-    .GroupBy(q => q.CreatedDate.Date);
-foreach (var group in groupedTeams)
+// GroupByMethod();
+
+
+var orderedTeams = await context.Teams
+    .OrderBy(q => q.Name)
+    .ToListAsync();
+
+
+var descPrderedTeams = await context.Teams
+    .OrderByDescending(q => q.Name)
+    .ToListAsync();
+
+
+void GroupByMethod()
 {
-    Console.WriteLine(group.Key);
-    foreach (var team in group)
+    // Grouping teams by CreatedDate
+    var groupedTeams = context.Teams
+        .GroupBy(q => q.CreatedDate.Date);
+    foreach (var group in groupedTeams)
     {
-        Console.WriteLine(team.Name);
+        Console.WriteLine(group.Key);
+        foreach (var team in group)
+        {
+            Console.WriteLine(team.Name);
+        }
     }
 }
+
 
 // Aggregate functions
 async Task AggregateMethods()
