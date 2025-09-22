@@ -59,14 +59,44 @@ async Task GetAllTeamsQuerySyntax()
 // GroupByMethod();
 
 
-var orderedTeams = await context.Teams
-    .OrderBy(q => q.Name)
-    .ToListAsync();
+//Skip and Take
+
+async Task skipAndTake()
+{
+    var recordCount = 3;
+    var page = 0;
+    var next = true;
+
+    while (next)
+    {
+        var teams = await context.Teams.Skip(page * recordCount).Take(recordCount).ToListAsync();
+
+        foreach (var team in teams)
+        {
+            Console.WriteLine(team.Name);
+        }
+
+        Console.WriteLine("Enter 'true' for the next set of records, 'false' for exit");
+        next = Convert.ToBoolean(Console.ReadLine());
+
+        if(!next ) break;
+        page++;
+    }
+}
+
+// Order By
+async Task OrderByMethods()
+{
+    var orderedTeams = await context.Teams
+        .OrderBy(q => q.Name)
+        .ToListAsync();
 
 
-var descPrderedTeams = await context.Teams
-    .OrderByDescending(q => q.Name)
-    .ToListAsync();
+    var descPrderedTeams = await context.Teams
+        .OrderByDescending(q => q.Name)
+        .ToListAsync();
+}
+
 
 
 void GroupByMethod()
