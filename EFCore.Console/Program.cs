@@ -2,6 +2,8 @@
 using EFCore.Data;
 using Microsoft.EntityFrameworkCore;
 
+
+
 //First we need an instance of context
 using var context = new FootballLeagueDbContext();
 
@@ -49,6 +51,21 @@ async Task GetAllTeamsQuerySyntax()
 
 // Select all record that meet a condition
 // await GetFilteredTeams();
+
+async Task AggregateMethods()
+{
+    var numberOfTeams = await context.Teams.CountAsync();
+    Console.WriteLine($"Number of Teams: {numberOfTeams}");
+
+    var numberOfTeamsCondition = await context.Teams.CountAsync(q => q.TeamId == 1);
+
+    var maxTeams = await context.Teams.MaxAsync(q => q.TeamId);
+    var minTeams = await context.Teams.MinAsync(q => q.TeamId);
+    var averageTeamId = await context.Teams.AverageAsync(q => q.TeamId);
+    var sumOfTeamIds = await context.Teams.SumAsync(q => q.TeamId);
+}
+
+
 
 async Task GetFilteredTeams()
 {
