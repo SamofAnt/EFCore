@@ -58,10 +58,19 @@ async Task GetAllTeamsQuerySyntax()
 // Grouping and Aggregating
 // GroupByMethod();
 
+//Select and Projecting
 
+var teams = await context.Teams
+    .Select(q => new {q.Name, q.CreatedDate})
+    .ToListAsync();
+
+foreach (var team in teams)
+{
+    Console.WriteLine($"{team.Name} - {team.CreatedDate }");
+}
 //Skip and Take
 
-async Task skipAndTake()
+async Task SkipAndTake()
 {
     var recordCount = 3;
     var page = 0;
