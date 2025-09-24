@@ -40,7 +40,7 @@ async Task GetAllTeamsQuerySyntax()
     var searchTerm = Console.ReadLine();
     var teams = await (from team in context.Teams
                        where EF.Functions.Like(team.Name, $"%{searchTerm}%")
-                                select team).ToListAsync();
+                       select team).ToListAsync();
     foreach (var t in teams)
     {
         Console.WriteLine(t.Name);
@@ -59,40 +59,70 @@ async Task GetAllTeamsQuerySyntax()
 // Grouping and Aggregating
 // GroupByMethod();
 
-// Inserting Data
-var newCoach = new Coach
-{
-    Name = "Jose Mourinho",
-    CreatedDate = DateTime.Now
-};
-/*await context.Coaches.AddAsync(newCoach);
-await context.SaveChangesAsync();*/
 
 
-// Loop Insert
 
-var newCoach1 = new Coach
+// Update Operations
+async Task UpdateWithTracking()
 {
-    Name = "Pep Guardiola",
-    CreatedDate = DateTime.Now
-};
-List<Coach> coaches = new List<Coach>
-{
-    newCoach1,
-    newCoach
-};
-foreach (var coach in coaches)
-{
-    await context.Coaches.AddAsync(coach);
+    var coach = await context.Coaches.FindAsync(9);
+    coach.Name = "Anton Samofalov";
+    await context.SaveChangesAsync();
+
 }
 
-Console.WriteLine(context.ChangeTracker.DebugView.LongView);
-await context.SaveChangesAsync();
-Console.WriteLine(context.ChangeTracker.DebugView.LongView);
+async Task UpdateWithoutTracking()
+{
+    var coach1 = await context.Coaches.AsNoTracking().FirstOrDefaultAsync(q => q.Id == 2);
+    coach1.Name = "Anton Samofalov";
+    Console.WriteLine(context.ChangeTracker.DebugView.LongView);
+    // context.Update(coach1);
+    context.Entry(coach1).State = EntityState.Modified;
+    Console.WriteLine(context.ChangeTracker.DebugView.LongView);
+    await context.SaveChangesAsync();
+}
 
-// Batch Insert
-await context.Coaches.AddRangeAsync(coaches);
-await context.SaveChangesAsync();
+
+
+// Inserting Data
+
+async Task InsertRecord()
+{
+    var newCoach = new Coach
+    {
+        Name = "Jose Mourinho",
+        CreatedDate = DateTime.Now
+    };
+    /*await context.Coaches.AddAsync(newCoach);
+    await context.SaveChangesAsync();*/
+
+
+    // Loop Insert
+
+    var newCoach1 = new Coach
+    {
+        Name = "Pep Guardiola",
+        CreatedDate = DateTime.Now
+    };
+    List<Coach> coaches = new List<Coach>
+    {
+        newCoach1,
+        newCoach
+    };
+    foreach (var coach in coaches)
+    {
+        await context.Coaches.AddAsync(coach);
+    }
+
+    Console.WriteLine(context.ChangeTracker.DebugView.LongView);
+    await context.SaveChangesAsync();
+    Console.WriteLine(context.ChangeTracker.DebugView.LongView);
+
+    // Batch Insert
+    await context.Coaches.AddRangeAsync(coaches);
+    await context.SaveChangesAsync();
+}
+
 
 
 async Task ListVsQueryable()
@@ -136,19 +166,19 @@ async Task ListVsQueryable()
 //Select and Projecting
 
 async Task SelectAndProjection()
+{
+
+
+    var teams = await context.Teams
+        .Select(q => new { q.Name, q.CreatedDate })
+        .ToListAsync();
+
+    foreach (var team in teams)
     {
-
-
-        var teams = await context.Teams
-            .Select(q => new { q.Name, q.CreatedDate })
-            .ToListAsync();
-
-        foreach (var team in teams)
-        {
-            Console.WriteLine($"{team.Name} - {team.CreatedDate}");
-        }
-        //Skip and Take
+        Console.WriteLine($"{team.Name} - {team.CreatedDate}");
     }
+    //Skip and Take
+}
 
 async Task SkipAndTake()
 {
@@ -168,7 +198,7 @@ async Task SkipAndTake()
         Console.WriteLine("Enter 'true' for the next set of records, 'false' for exit");
         next = Convert.ToBoolean(Console.ReadLine());
 
-        if(!next ) break;
+        if (!next) break;
         page++;
     }
 }
@@ -223,7 +253,7 @@ async Task AggregateMethods()
 async Task GetFilteredTeams()
 {
     Console.WriteLine("Enter Desired Team: ");
-    var searchTerm = Console.ReadLine(); 
+    var searchTerm = Console.ReadLine();
     var teamsFiltered = await context.Teams.Where(q => q.Name == searchTerm)
         .ToListAsync();
 
@@ -236,7 +266,8 @@ async Task GetFilteredTeams()
     var partialMatches = await context.Teams.Where(q => EF.Functions.Like(q.Name, $"%{searchTerm}%")).ToListAsync();
 }
 
-async Task GetAllTeams (){
+async Task GetAllTeams()
+{
 
     var teams = await context.Teams.ToListAsync();
 
@@ -263,7 +294,7 @@ async Task GetOneTeam()
     }
 
     var teamFirstWithCondition = await context.Teams.FirstAsync(team => team.TeamId == 1);
-    if(teamFirstWithCondition != null)
+    if (teamFirstWithCondition != null)
     {
         Console.WriteLine(teamFirstWithCondition.Name);
     }
