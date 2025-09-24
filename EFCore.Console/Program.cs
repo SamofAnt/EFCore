@@ -59,7 +59,10 @@ async Task GetAllTeamsQuerySyntax()
 // Grouping and Aggregating
 // GroupByMethod();
 
-
+var coach = await context.Coaches.FindAsync(9);
+//context.Remove(coach);
+context.Entry(coach).State = EntityState.Deleted;
+await context.SaveChangesAsync();
 
 
 // Update Operations
