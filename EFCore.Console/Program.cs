@@ -59,38 +59,78 @@ async Task GetAllTeamsQuerySyntax()
 // Grouping and Aggregating
 // GroupByMethod();
 
-Console.WriteLine("Enter '1' for Team with Id 1 or '2' for teams that contain 'F.C");
-var option = Convert.ToInt32(Console.ReadLine());
-List<Team> teamAsList = new List<Team>();
+// Inserting Data
+var newCoach = new Coach
+{
+    Name = "Jose Mourinho",
+    CreatedDate = DateTime.Now
+};
+/*await context.Coaches.AddAsync(newCoach);
+await context.SaveChangesAsync();*/
 
-teamAsList = await context.Teams.ToListAsync();
-if (option == 1)
+
+// Loop Insert
+
+var newCoach1 = new Coach
 {
-    teamAsList = teamAsList.Where(q => q.TeamId == 1).ToList();
-}
-else if (option == 2)
+    Name = "Pep Guardiola",
+    CreatedDate = DateTime.Now
+};
+List<Coach> coaches = new List<Coach>
 {
-    teamAsList = teamAsList.Where(q => q.Name.Contains("F.C.")).ToList();
+    newCoach1,
+    newCoach
+};
+foreach (var coach in coaches)
+{
+    await context.Coaches.AddAsync(coach);
 }
 
-foreach (var team in teamAsList)
-{
-    Console.WriteLine(team.Name);
-}
+Console.WriteLine(context.ChangeTracker.DebugView.LongView);
+await context.SaveChangesAsync();
+Console.WriteLine(context.ChangeTracker.DebugView.LongView);
 
-var teamAsQueryable = context.Teams.AsQueryable();
-if (option == 1)
+// Batch Insert
+await context.Coaches.AddRangeAsync(coaches);
+await context.SaveChangesAsync();
+
+
+async Task ListVsQueryable()
 {
-    teamAsQueryable = teamAsQueryable.Where(q => q.TeamId == 1);
-}
-else if (option == 2)
-{
-    teamAsQueryable = teamAsQueryable.Where(q => q.Name.Contains("F.C."));
-}
-var finalTeamList = await teamAsQueryable.ToListAsync();
-foreach (var team in finalTeamList)
-{
-    Console.WriteLine(team.Name);
+    Console.WriteLine("Enter '1' for Team with Id 1 or '2' for teams that contain 'F.C");
+    var option = Convert.ToInt32(Console.ReadLine());
+    List<Team> teamAsList = new List<Team>();
+
+    teamAsList = await context.Teams.ToListAsync();
+    if (option == 1)
+    {
+        teamAsList = teamAsList.Where(q => q.TeamId == 1).ToList();
+    }
+    else if (option == 2)
+    {
+        teamAsList = teamAsList.Where(q => q.Name.Contains("F.C.")).ToList();
+    }
+
+    foreach (var team in teamAsList)
+    {
+        Console.WriteLine(team.Name);
+    }
+
+    var teamAsQueryable = context.Teams.AsQueryable();
+    if (option == 1)
+    {
+        teamAsQueryable = teamAsQueryable.Where(q => q.TeamId == 1);
+    }
+    else if (option == 2)
+    {
+        teamAsQueryable = teamAsQueryable.Where(q => q.Name.Contains("F.C."));
+    }
+    var finalTeamList = await teamAsQueryable.ToListAsync();
+    foreach (var team in finalTeamList)
+    {
+        Console.WriteLine(team.Name);
+    }
+
 }
 
 //Select and Projecting
@@ -258,3 +298,5 @@ async Task GetOneTeam()
     }
 
 }
+
+
