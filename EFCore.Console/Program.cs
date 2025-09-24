@@ -59,10 +59,22 @@ async Task GetAllTeamsQuerySyntax()
 // Grouping and Aggregating
 // GroupByMethod();
 
-var coach = await context.Coaches.FindAsync(9);
-//context.Remove(coach);
-context.Entry(coach).State = EntityState.Deleted;
-await context.SaveChangesAsync();
+// Execute Delete
+await context.Coaches.Where(q => q.Name == "Anton Samofalov").ExecuteDeleteAsync();
+
+// Execute Update
+await context.Coaches.Where(q => q.Name == "Jose Mourinho")
+    .ExecuteUpdateAsync(set => set.SetProperty(prop => prop.Name, "Pep Guardiola")
+        .SetProperty(prop=> prop.CreatedDate, DateTime.Now));
+
+async Task DeleteOperation()
+{
+    var coach = await context.Coaches.FindAsync(9);
+    //context.Remove(coach);
+    context.Entry(coach).State = EntityState.Deleted;
+    await context.SaveChangesAsync();
+}
+
 
 
 // Update Operations
