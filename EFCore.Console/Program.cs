@@ -12,16 +12,16 @@ using var context = new FootballLeagueDbContext();
 //GetAllTeams();    
 
 // Select a single record - First one in the list that meets a codition
-//var team =  await context.Teams.FirstAsync(t=> t.TeamId == 1);
-// var team = await context.Teams.FirstOrDefaultAsync(t=> t.TeamId == 1);
+//var team =  await context.Teams.FirstAsync(t=> t.Id == 1);
+// var team = await context.Teams.FirstOrDefaultAsync(t=> t.Id == 1);
 
 //Selecting a single record - First one in the list
 //var team = await context.Coaches.FirstAsync();
 //var team = await context.Coaches.FirstOrDefaultAsync();
 
 //Selecting a single record - Only one record should be returned
-// var team = await context.Teams.SingleAsync(t=> t.TeamId == 1);
-//var team = await context.Teams.SingleOrDefaultAsync(t=> t.TeamId == 1);
+// var team = await context.Teams.SingleAsync(t=> t.Id == 1);
+//var team = await context.Teams.SingleOrDefaultAsync(t=> t.Id == 1);
 // var team = await context.Coaches.SingleAsync();
 
 //Selecting based on id
@@ -149,7 +149,7 @@ async Task ListVsQueryable()
     teamAsList = await context.Teams.ToListAsync();
     if (option == 1)
     {
-        teamAsList = teamAsList.Where(q => q.TeamId == 1).ToList();
+        teamAsList = teamAsList.Where(q => q.Id == 1).ToList();
     }
     else if (option == 2)
     {
@@ -164,7 +164,7 @@ async Task ListVsQueryable()
     var teamAsQueryable = context.Teams.AsQueryable();
     if (option == 1)
     {
-        teamAsQueryable = teamAsQueryable.Where(q => q.TeamId == 1);
+        teamAsQueryable = teamAsQueryable.Where(q => q.Id == 1);
     }
     else if (option == 2)
     {
@@ -255,12 +255,12 @@ async Task AggregateMethods()
     var numberOfTeams = await context.Teams.CountAsync();
     Console.WriteLine($"Number of Teams: {numberOfTeams}");
 
-    var numberOfTeamsCondition = await context.Teams.CountAsync(q => q.TeamId == 1);
+    var numberOfTeamsCondition = await context.Teams.CountAsync(q => q.Id == 1);
 
-    var maxTeams = await context.Teams.MaxAsync(q => q.TeamId);
-    var minTeams = await context.Teams.MinAsync(q => q.TeamId);
-    var averageTeamId = await context.Teams.AverageAsync(q => q.TeamId);
-    var sumOfTeamIds = await context.Teams.SumAsync(q => q.TeamId);
+    var maxTeams = await context.Teams.MaxAsync(q => q.Id);
+    var minTeams = await context.Teams.MinAsync(q => q.Id);
+    var averageId = await context.Teams.AverageAsync(q => q.Id);
+    var sumOfIds = await context.Teams.SumAsync(q => q.Id);
 }
 
 
@@ -288,7 +288,7 @@ async Task GetAllTeams()
 
     foreach (var team in teams)
     {
-        Console.WriteLine($"TeamId: {team.TeamId}, Name: {team.Name}, CreatedDate: {team.CreatedDate}");
+        Console.WriteLine($"Id: {team.Id}, Name: {team.Name}, CreatedDate: {team.CreatedDate}");
     }
 
 }
@@ -308,13 +308,13 @@ async Task GetOneTeam()
         Console.WriteLine(teamFirstOrDefault);
     }
 
-    var teamFirstWithCondition = await context.Teams.FirstAsync(team => team.TeamId == 1);
+    var teamFirstWithCondition = await context.Teams.FirstAsync(team => team.Id == 1);
     if (teamFirstWithCondition != null)
     {
         Console.WriteLine(teamFirstWithCondition.Name);
     }
 
-    var teamFirstOfDefaultWithCondition = await context.Teams.FirstOrDefaultAsync(team => team.TeamId == 1);
+    var teamFirstOfDefaultWithCondition = await context.Teams.FirstOrDefaultAsync(team => team.Id == 1);
     if (teamFirstOfDefaultWithCondition != null)
     {
         Console.WriteLine(teamFirstOfDefaultWithCondition.Name);
@@ -326,12 +326,12 @@ async Task GetOneTeam()
         Console.WriteLine(teamSingle.Name);
     }
 
-    var teamSingleWithCondition = await context.Teams.SingleAsync(team => team.TeamId == 2);
+    var teamSingleWithCondition = await context.Teams.SingleAsync(team => team.Id == 2);
     if (teamSingleWithCondition != null)
     {
         Console.WriteLine(teamSingleWithCondition.Name);
     }
-    var SingleOfDefault = await context.Teams.SingleOrDefaultAsync(team => team.TeamId == 2);
+    var SingleOfDefault = await context.Teams.SingleOrDefaultAsync(team => team.Id == 2);
     if (SingleOfDefault != null)
     {
         Console.WriteLine(SingleOfDefault.Name);
@@ -345,4 +345,21 @@ async Task GetOneTeam()
 
 }
 
+DelegateExample();
+
+void SayHello(string name) => Console.WriteLine($"Hello, {name}!");
+
+void SayGoodbye(string name) => Console.WriteLine($"Goodbye, {name}!");
+
+void DelegateExample()
+{
+    Console.WriteLine("Delegate Example");
+    GreetDelegate greet = SayHello;
+    greet("Anton");   // Output: Hello, Anton!
+    greet = SayGoodbye;
+    greet("Anton");   // Output: Goodbye, Anton!
+}
+
+
+public delegate void GreetDelegate(string name);
 

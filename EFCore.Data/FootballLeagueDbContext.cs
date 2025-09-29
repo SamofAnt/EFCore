@@ -20,6 +20,11 @@ namespace EFCore.Data
         public DbSet<Team> Teams { get; set; }
 
         public DbSet<Coach> Coaches { get; set; }
+
+
+        public DbSet<Match> Matches { get; set; }
+
+        public DbSet<League> Leagues { get; set; }
         public string DbPath { get; private set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -35,19 +40,19 @@ namespace EFCore.Data
             modelBuilder.Entity<Team>().HasData(
                 new Team
                 {
-                    TeamId = 1,
+                    Id = 1,
                     Name = "Tivoli Gardens F.C.",
                     CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31)
                 },
                 new Team
                 {
-                    TeamId = 2,
+                    Id = 2,
                     Name = "Waterhouse F.C.",
                     CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31)
                 },
                 new Team
                 {
-                    TeamId = 3,
+                    Id = 3,
                     Name = "Humble Lions F.C.",
                     CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31)
                 }
