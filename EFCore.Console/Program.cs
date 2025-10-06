@@ -35,11 +35,28 @@ if (teamBasedOnId != null)
 // Select all teams
 // await GetAllTeams();
 
+async Task Projection()
+{
+    var teams = await context.Teams
+        .Select(q => new
+        {
+            TeamId = q.Id,
+            TeamName = q.Name,
+            CoachName = q.Coach.Name,
+            TotalHomeGoals = q.HomeMatches.Sum(x => x.HomeTeamScore),
+            TotalAwayGoals = q.AwayMatches.Sum(x => x.AwayTeamScore)
+        })
+        .ToListAsync();
+}
 
-var teams = await context.Teams
-    .Include("Coach")
-    .Include(q => q.HomeMatches.Where(q=> q.HomeTeamScore > 0) )
-    .ToListAsync();
+async Task FilteringIncludes()
+{
+    var teams = await context.Teams
+        .Include("Coach")
+        .Include(q => q.HomeMatches.Where(q => q.HomeTeamScore > 0))
+        .ToListAsync();
+
+}
 
 async Task LoadingMethods()
 {
