@@ -24,19 +24,25 @@ internal class TeamConfiguration : IEntityTypeConfiguration<Team>
             {
                 Id = 1,
                 Name = "Tivoli Gardens F.C.",
-                CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31)
+                CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31),
+                LeagueId = 1,
+                CoachId = 1
             },
             new Team
             {
                 Id = 2,
                 Name = "Waterhouse F.C.",
-                CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31)
+                CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31),
+                LeagueId = 1,
+                CoachId = 2
             },
             new Team
             {
                 Id = 3,
                 Name = "Humble Lions F.C.",
-                CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31)
+                CreatedDate = new DateTime(2025, 9, 20, 2, 41, 50, 31),
+                LeagueId = 1,
+                CoachId = 3
             }
         );
     }

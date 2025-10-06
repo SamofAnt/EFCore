@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 //First we need an instance of context
 using var context = new FootballLeagueDbContext();
-await context.Database.EnsureCreatedAsync();
+
 
 //Select all teams
 //GetAllTeams();    
@@ -35,6 +35,49 @@ if (teamBasedOnId != null)
 // Select all teams
 // await GetAllTeams();
 
+// Insert record with FK
+var match = new Match
+{
+    AwayTeamId = 1,
+    HomeTeamId = 2,
+    HomeTeamScore = 0,
+    AwayTeamScore = 0,
+    MatchDate = new DateTime(2023, 10, 1),
+    TicketPrice = 20
+};
+await context.AddAsync(match);
+await context.SaveChangesAsync();
+
+// Insert Parent with Child Record
+var coach = new Coach
+{
+    Name = "Johnson"
+};
+
+var team = new Team
+{
+    Name = "New Team",
+    Coach = coach,
+};
+await context.AddAsync(team);
+await context.SaveChangesAsync();
+
+// Insert Parent with Multiple Child Records
+var league = new League
+{
+    Name = "New League",
+    Teams = new List<Team>
+    {
+        new Team { Name = "Juventus", Coach = new Coach { Name = "Juve Coach" } },
+        new Team { Name = "AC Milan", Coach = new Coach { Name = "Milan Coach" } },
+        new Team{ Name = "AS Roma", Coach = new Coach
+        {
+            Name = "Roma Coach"
+        }}
+    }
+};
+await context.AddAsync(league);
+await context.SaveChangesAsync(); 
 async Task GetAllTeamsQuerySyntax()
 {
     Console.WriteLine("Enter Desired Team: ");
