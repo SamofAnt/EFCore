@@ -10,6 +10,6 @@ public class Match : BaseDomainModel
     public DateTime MatchDate { get; set; }
     public decimal TicketPrice { get; set; }
 
-    public Team HomeTeam { get; set; }
-    public Team AwayTeam { get; set; }
+    public virtual Team HomeTeam { get; set; }
+    public  virtual Team AwayTeam { get; set; }
 }

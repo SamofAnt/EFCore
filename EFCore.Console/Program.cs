@@ -35,49 +35,106 @@ if (teamBasedOnId != null)
 // Select all teams
 // await GetAllTeams();
 
-// Insert record with FK
-var match = new Match
-{
-    AwayTeamId = 1,
-    HomeTeamId = 2,
-    HomeTeamScore = 0,
-    AwayTeamScore = 0,
-    MatchDate = new DateTime(2023, 10, 1),
-    TicketPrice = 20
-};
-await context.AddAsync(match);
-await context.SaveChangesAsync();
 
-// Insert Parent with Child Record
-var coach = new Coach
+async Task LoadingMethods()
 {
-    Name = "Johnson"
-};
 
-var team = new Team
-{
-    Name = "New Team",
-    Coach = coach,
-};
-await context.AddAsync(team);
-await context.SaveChangesAsync();
+    // Eager Loading - Include and ThenInclude
+    /*var leagues = await context.Leagues
+        .Include(q => q.Teams)
+        .ThenInclude(q=> q.Coach)
+        .ToListAsync();
 
-// Insert Parent with Multiple Child Records
-var league = new League
-{
-    Name = "New League",
-    Teams = new List<Team>
+    foreach (var league in leagues)
     {
-        new Team { Name = "Juventus", Coach = new Coach { Name = "Juve Coach" } },
-        new Team { Name = "AC Milan", Coach = new Coach { Name = "Milan Coach" } },
-        new Team{ Name = "AS Roma", Coach = new Coach
+        Console.WriteLine(league.Name);
+        foreach (var team in league.Teams)
         {
-            Name = "Roma Coach"
-        }}
+            Console.WriteLine($"{team.Name} - {team.Coach.Name}");
+        }
+    }*/
+
+    // Explicit Loading
+    /*var league = await context.FindAsync<League>(1);
+    if (!league.Teams.Any())
+    {
+        Console.WriteLine("Teams have not been loaded");
     }
-};
-await context.AddAsync(league);
-await context.SaveChangesAsync(); 
+
+    await context.Entry(league)
+        .Collection(q => q.Teams)
+        .LoadAsync();
+    if (league.Teams.Any())
+    {
+        foreach (var team in league.Teams)
+        {
+            Console.WriteLine($"{team.Name}");
+        }
+    }*/
+    // Lazy Loading
+    /*var league = await context.FindAsync<League>(1);
+    foreach (var team in league.Teams)
+    {
+        Console.WriteLine($"{team.Name}");
+    }*/
+
+    foreach (var league in context.Leagues)
+    {
+        foreach (var team in league.Teams)
+        {
+            Console.WriteLine($"{team.Name} - {team.Coach.Name}");
+        }
+    }
+}
+async Task InsertRelatedData()
+{
+    // Insert record with FK
+    var match = new Match
+    {
+        AwayTeamId = 1,
+        HomeTeamId = 2,
+        HomeTeamScore = 0,
+        AwayTeamScore = 0,
+        MatchDate = new DateTime(2023, 10, 1),
+        TicketPrice = 20
+    };
+    await context.AddAsync(match);
+    await context.SaveChangesAsync();
+
+    // Insert Parent with Child Record
+    var coach = new Coach
+    {
+        Name = "Johnson"
+    };
+
+    var team = new Team
+    {
+        Name = "New Team",
+        Coach = coach,
+    };
+    await context.AddAsync(team);
+    await context.SaveChangesAsync();
+
+    // Insert Parent with Multiple Child Records
+    var league = new League
+    {
+        Name = "New League",
+        Teams = new List<Team>
+        {
+            new Team { Name = "Juventus", Coach = new Coach { Name = "Juve Coach" } },
+            new Team { Name = "AC Milan", Coach = new Coach { Name = "Milan Coach" } },
+            new Team{ Name = "AS Roma", Coach = new Coach
+            {
+                Name = "Roma Coach"
+            }}
+        }
+    };
+    await context.AddAsync(league);
+    await context.SaveChangesAsync();
+}
+
+
+
 async Task GetAllTeamsQuerySyntax()
 {
     Console.WriteLine("Enter Desired Team: ");
@@ -392,22 +449,3 @@ async Task GetOneTeam()
     }
 
 }
-
-DelegateExample();
-
-void SayHello(string name) => Console.WriteLine($"Hello, {name}!");
-
-void SayGoodbye(string name) => Console.WriteLine($"Goodbye, {name}!");
-
-void DelegateExample()
-{
-    Console.WriteLine("Delegate Example");
-    GreetDelegate greet = SayHello;
-    greet("Anton");   // Output: Hello, Anton!
-    greet = SayGoodbye;
-    greet("Anton");   // Output: Goodbye, Anton!
-}
-
-
-public delegate void GreetDelegate(string name);
-

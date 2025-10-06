@@ -4,7 +4,7 @@
     public class Coach : BaseDomainModel
     {
         public string Name { get; set; }
-        public Team? Team {
+        public virtual Team? Team {
             get;
             set;
         }
