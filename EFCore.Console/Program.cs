@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 //First we need an instance of context
 using var context = new FootballLeagueDbContext();
+await context.Database.EnsureCreatedAsync();
 
 //Select all teams
 //GetAllTeams();    
@@ -60,12 +61,16 @@ async Task GetAllTeamsQuerySyntax()
 // GroupByMethod();
 
 // Execute Delete
-await context.Coaches.Where(q => q.Name == "Anton Samofalov").ExecuteDeleteAsync();
+async Task ExecuteDeleteAndUpdate()
+{
+    await context.Coaches.Where(q => q.Name == "Anton Samofalov").ExecuteDeleteAsync();
 
-// Execute Update
-await context.Coaches.Where(q => q.Name == "Jose Mourinho")
-    .ExecuteUpdateAsync(set => set.SetProperty(prop => prop.Name, "Pep Guardiola")
-        .SetProperty(prop=> prop.CreatedDate, DateTime.Now));
+    // Execute Update
+    await context.Coaches.Where(q => q.Name == "Jose Mourinho")
+        .ExecuteUpdateAsync(set => set.SetProperty(prop => prop.Name, "Pep Guardiola")
+            .SetProperty(prop => prop.CreatedDate, DateTime.Now));
+}
+
 
 async Task DeleteOperation()
 {
