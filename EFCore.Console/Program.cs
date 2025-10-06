@@ -36,6 +36,11 @@ if (teamBasedOnId != null)
 // await GetAllTeams();
 
 
+var teams = await context.Teams
+    .Include("Coach")
+    .Include(q => q.HomeMatches.Where(q=> q.HomeTeamScore > 0) )
+    .ToListAsync();
+
 async Task LoadingMethods()
 {
 
