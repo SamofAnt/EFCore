@@ -9,5 +9,8 @@ public class Team: BaseDomainModel
     public int LeagueId { get; set; }
 
     public int CoachId { get; set; }
+
+    public List<Match> HomeMatches { get; set; }
+    public List<Match> AwayMatches { get; set; }
 }
 

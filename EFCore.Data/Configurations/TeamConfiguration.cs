@@ -8,6 +8,17 @@ internal class TeamConfiguration : IEntityTypeConfiguration<Team>
 {
     public void Configure(EntityTypeBuilder<Team> builder)
     {
+        builder.HasMany(m => m.HomeMatches)
+            .WithOne(q => q.HomeTeam)
+            .HasForeignKey(q => q.HomeTeamId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasMany(m => m.AwayMatches)
+            .WithOne(q => q.AwayTeam)
+            .HasForeignKey(q => q.AwayTeamId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasIndex(q => q.Name).IsUnique();
         builder.HasData(
             new Team
             {
